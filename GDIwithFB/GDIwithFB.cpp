@@ -8,6 +8,8 @@
 HINSTANCE hInst;
 HWND hMainWnd;
 
+#define REALTIME_DRAW 1 // 实时绘制
+
 static float locx = 320, locy = 240;
 
 // 绘制函数：使用framedc参数进行缓冲绘制，使用hWnd和devdc参数获取窗口和目标设备的信息
@@ -154,10 +156,15 @@ int WINAPI WinMain(__in HINSTANCE hInstance, __in_opt HINSTANCE hPrevInstance, _
 		}
 		else // 没有获取到消息
 		{
+#ifdef REALTIME_DRAW
 			// 实时绘制
 			HDC hdc = GetDC(hMainWnd);
 			CallFrameDraw(hMainWnd, hdc);
 			ReleaseDC(hMainWnd, hdc);
+#else
+			// 等待消息
+			WaitMessage();
+#endif
 		}
 	}
 
